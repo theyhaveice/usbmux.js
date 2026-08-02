@@ -1,0 +1,19 @@
+{
+  "name": "usbmux.js",
+  "author": "theyhaveice",
+  "version": "0.1.0-alpha.0",
+  "description": "Browser-side iPhone USB mux and pairing over WebUSB",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "iphone",
+    "ios",
+    "usbmux",
+    "webusb"
+  ],
+  "license": "MIT"
+}

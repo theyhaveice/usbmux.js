@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>usbmux.js test</title>
+</head>
+<body>
+  <h1>usbmux.js</h1>
+  <h2>Pair Device</h2>
+  <button id="pair" type="button">Connect</button>
+  <button id="listTrusted" type="button">List Trusted Devices</button>
+  <input id="serial" type="text" placeholder="Serial number">
+  <button id="removeTrusted" type="button">Remove Trusted Device</button>
+  <br><br>
+  <textarea id="console" aria-label="Console" rows="20" cols="80" readonly></textarea>
+
+  <script type="module">
+    import USBMux from "./index.js";
+
+    const pairButton = document.querySelector("#pair");
+    const listTrustedButton = document.querySelector("#listTrusted");
+    const serialInput = document.querySelector("#serial");
+    const removeTrustedButton = document.querySelector("#removeTrusted");
+    const consoleOutput = document.querySelector("#console");
+    const mux = new USBMux();
+
+    function write(message) {
+      consoleOutput.value += `${message}\n`;
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    mux.addEventListener("pairPromptStateChanged", event => {
+      const time = new Date().toISOString();
+      write(`${event.type}: ${event.detail.state} ${time}`);
+    });
+
+    pairButton.addEventListener("click", async () => {
+      pairButton.disabled = true;
+      write(`pair(): started ${new Date().toISOString()}`);
+      try {
+        const result = await mux.pair();
+        write("pair(): completed");
+        write(`serialNumber=${result.serialNumber}`);
+        write(`isPaired=${mux.isPaired}`);
+      } catch (error) {
+        write(`error: ${error.message}`);
+      } finally {
+        pairButton.disabled = false;
+      }
+    });
+
+    listTrustedButton.addEventListener("click", async () => {
+      const devices = await mux.getTrustedDevices();
+      write(`trustedDevices=${JSON.stringify(devices)}`);
+    });
+
+    removeTrustedButton.addEventListener("click", async () => {
+      const serial = serialInput.value.trim();
+      if (!serial) return write("error: enter a serial number");
+      try {
+        write(`removeTrustedDevice=${await mux.removeTrustedDevice(serial)}`);
+      } catch (error) {
+        write(`error: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>
