@@ -3,6 +3,14 @@
   "author": "theyhaveice",
   "version": "0.1.0-alpha.0",
   "description": "Browser-side iPhone USB mux and pairing over WebUSB",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theyhaveice/usbmux.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/theyhaveice/usbmux.js/issues"
+  },
+  "homepage": "https://github.com/theyhaveice/usbmux.js#readme",
   "type": "module",
   "main": "./index.js",
   "exports": {
